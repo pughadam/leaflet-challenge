@@ -1,4 +1,4 @@
-// Creating our initial map object
+//Creating our initial map object
 // We set the longitude, latitude, and the starting zoom level
 // This gets inserted into the div with an id of 'map'
 var myMap = L.map("map", {
@@ -24,34 +24,42 @@ var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.g
 
 // Grabbing our GeoJSON data..
 d3.json(link).then(function (data) {
-    // Creating a GeoJSON layer with the retrieved data
-    
 
-    var geojsonMarkerOptions = {
-        radius: 8,
-        fillColor: "#ff7800",
-        color: "#000",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-    };
+    function getColor(magnitude) {
+        switch (true) {
+            case mag > 5:
+                return "#dcf400";
+            case mag > 4:
+                return "#f7db11";
+            case mag > 3:
+                return "#fdb72a";
+            case mag > 2:
+                return "#fca35d";
+            case mag > 1:
+                return "#ff5f65";
+            default:
+                return "#98ee00"
+        }
+    }
+
+    function getRadius(magnitude) {
+        if (magnitude === 0) {
+            return 1;
+        }
+        return magnitude * 4;
+    }
 
     L.geoJson(data, {
         pointToLayer: function (feature, latlng) {
+            var geojsonMarkerOptions = {
+                radius: 8,
+                fillColor: "#00000", //getColor(feature.properties.mag), 
+                color: "#000",
+                // radius: getRadius(feature.properties.mag),
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            };
             return L.circleMarker(latlng, geojsonMarkerOptions);
-        }
-    }).addTo(myMap);
-
-    function getColor(depth) {
-        if depth <= 10;
-            return 
-        if depth 
-    }
+        }.addTo(myMap),
 });
-
-
-// function earthquakeLayer (feature, layer) {
-//     layer.bindPopup("<h3>" + feature.properties.place + "</h3><hr><p>" new Date(feature.properties.time) + "</p>";
-
-// var earthquake = L.geoJson(earthquakeData, {
-//     OnEachFeature : earthquakeLayer});
